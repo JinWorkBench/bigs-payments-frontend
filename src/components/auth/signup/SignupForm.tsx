@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 
 export default function SignupForm() {
-	
   // 폼 입력 필드 상태 관리
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -16,8 +15,20 @@ export default function SignupForm() {
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]); // 여러 에러 동시 표시
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
+  // 폼 제출 핸들러
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // 모든 에러 초기화
+    setUsernameError("");
+    setNameError("");
+    setPasswordErrors([]);
+    setConfirmPasswordError("");
+
+    // TODO: 검증 함수 호출
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <label htmlFor="username" className="block mb-1 font-semibold">
         이메일
       </label>
