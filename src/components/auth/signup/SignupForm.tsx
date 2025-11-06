@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { validateEmail, validateName } from "@/utils/validate";
+import {
+  validateEmail,
+  validateName,
+  validatePasswordAll,
+  validateConfirmPassword,
+} from "@/utils/validate";
 
 export default function SignupForm() {
   // 폼 입력 필드 상태 관리
@@ -37,7 +42,22 @@ export default function SignupForm() {
     if (nameValidationError) {
       setNameError(nameValidationError);
     }
+
+    // 비밀번호 종합 검증
+    const pwErrors = validatePasswordAll(password);
+    if (pwErrors.length > 0) {
+      setPasswordErrors(pwErrors);
+    }
+
+    // 비밀번호 확인 검증 (비밀번호 유효 시에만 검증)
+    if (pwErrors.length === 0) {
+      const confirmPwError = validateConfirmPassword(password, confirmPassword);
+      if (confirmPwError) {
+        setConfirmPasswordError(confirmPwError);
+      }
+    }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="username" className="block mb-1 font-semibold">
