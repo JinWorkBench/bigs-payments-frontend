@@ -1,9 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 export default function SigninForm() {
+  // 폼 입력 필드 상태 관리
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <form>
       <label htmlFor="username" className="block mb-1 font-semibold">
@@ -13,6 +17,8 @@ export default function SigninForm() {
         type="email"
         id="username"
         name="username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         placeholder="example@email.com"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
@@ -24,6 +30,8 @@ export default function SigninForm() {
         type="password"
         id="password"
         name="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         placeholder="비밀번호를 입력하세요"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
