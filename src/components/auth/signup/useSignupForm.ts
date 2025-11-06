@@ -66,6 +66,16 @@ export const useSignupForm = () => {
       }
     }
 
+    // 검증 실패 시 API 호출하지 않음
+    if (
+      emailError ||
+      nameValidationError ||
+      pwErrors.length > 0 ||
+      confirmPasswordError
+    ) {
+      return;
+    }
+
     // API 호출
     setIsLoading(true);
     const response = await signupAPI(username, name, password, confirmPassword);
