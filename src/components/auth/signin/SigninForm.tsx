@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { validateEmail, validatePassword } from "@/utils/validate";
 
 export default function SigninForm() {
   // 폼 입력 필드 상태 관리
@@ -19,6 +20,18 @@ export default function SigninForm() {
     // 모든 에러 초기화
     setUsernameError("");
     setPasswordError("");
+
+    // 이메일 검증
+    const emailError = validateEmail(username);
+    if (emailError) {
+      setUsernameError(emailError);
+    }
+
+    // 비밀번호 검증
+    const pwError = validatePassword(password);
+    if (pwError) {
+      setPasswordError(pwError);
+    }
   };
 
   return (
