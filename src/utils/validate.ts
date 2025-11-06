@@ -57,6 +57,33 @@ export const validatePassword = (password: string): string | undefined => {
   return undefined;
 };
 
+// 비밀번호 종합 검증 (password) - 모든 오류 메시지 반환
+export const validatePasswordAll = (password: string): string[] => {
+  const errors: string[] = [];
+
+  if (!password) {
+    return ['비밀번호를 입력해주세요.'];
+  }
+
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    return [`비밀번호는 최소 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`];
+  }
+
+  if (!/[0-9]/.test(password)) {
+    errors.push('비밀번호는 숫자(0-9)를 포함해야 합니다.');
+  }
+
+  if (!/[a-zA-Z]/.test(password)) {
+    errors.push('비밀번호는 영문자(a-z, A-Z)를 포함해야 합니다.');
+  }
+
+  if (!/[!%*#?&]/.test(password)) {
+    errors.push('비밀번호는 특수문자(!%*#?&) 중 최소 1개를 포함해야 합니다.');
+  }
+
+  return errors;
+};
+
 // 비밀번호 확인 검증 (confirmPassword)
 export const validateConfirmPassword = (password: string, confirmPassword: string): string | undefined => {
   
