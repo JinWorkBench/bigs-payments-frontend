@@ -1,5 +1,11 @@
-import type { SignupRequest, ApiResponse } from "@/types/api";
+import type {
+  SignupRequest,
+  SigninRequest,
+  AuthTokenResponse,
+  ApiResponse,
+} from "@/types/api";
 
+// 회원가입 API 호출
 export const signupAPI = async (
   username: string,
   name: string,
@@ -31,6 +37,48 @@ export const signupAPI = async (
     return {
       success: true,
       message: "회원가입 성공",
+    };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "알 수 없는 오류 발생";
+
+    return {
+      success: false,
+      error: errorMessage,
+    };
+  }
+};
+
+// 로그인 API 호출
+export const signinAPI = async (
+  username: string,
+  password: string,
+): Promise<ApiResponse<AuthTokenResponse>> => {
+  try {
+    const response = await fetch("/api/auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      } as SigninRequest),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || "로그인 실패",
+      };
+    }
+
+    return {
+      success: true,
+      message: "로그인 성공",
+      data: data as AuthTokenResponse,
     };
   } catch (error) {
     const errorMessage =
