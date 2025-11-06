@@ -3,12 +3,18 @@
 import React, { useState } from "react";
 
 export default function SignupForm() {
-
-	// 폼 입력 필드 상태 관리
+	
+  // 폼 입력 필드 상태 관리
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // 폼 입력 필드 에러 메시지 상태 관리
+  const [usernameError, setUsernameError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]); // 여러 에러 동시 표시
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   return (
     <form>
@@ -19,11 +25,14 @@ export default function SignupForm() {
         type="email"
         id="username"
         name="username"
-				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         placeholder="example@email.com"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+      {usernameError && (
+        <p className="text-red-500 text-sm mb-4">{usernameError}</p>
+      )}
 
       <label htmlFor="name" className="block mb-1 font-semibold">
         이름
@@ -32,11 +41,12 @@ export default function SignupForm() {
         type="text"
         id="name"
         name="name"
-				value={name}
+        value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="홍길동"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+      {nameError && <p className="text-red-500 text-sm mb-4">{nameError}</p>}
 
       <label htmlFor="password" className="block mb-1 font-semibold">
         비밀번호
@@ -50,6 +60,15 @@ export default function SignupForm() {
         placeholder="비밀번호를 입력하세요"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+      {passwordErrors.length > 0 && (
+        <div className="mb-4">
+          {passwordErrors.map((error, index) => (
+            <p key={index} className="text-red-500 text-sm">
+              • {error}
+            </p>
+          ))}
+        </div>
+      )}
 
       <label htmlFor="confirmPassword" className="block mb-1 font-semibold">
         비밀번호 확인
@@ -63,6 +82,9 @@ export default function SignupForm() {
         placeholder="비밀번호를 다시 입력하세요"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+      {confirmPasswordError && (
+        <p className="text-red-500 text-sm mb-6">{confirmPasswordError}</p>
+      )}
 
       <button
         type="submit"
