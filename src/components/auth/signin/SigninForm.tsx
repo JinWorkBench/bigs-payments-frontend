@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
+import Link from "next/link";
 
 export default function SigninForm() {
   return (
@@ -26,6 +27,18 @@ export default function SigninForm() {
         placeholder="비밀번호를 입력하세요"
         className="w-full border border-gray-300 rounded px-3 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+
+      <div className="mb-6 text-center">
+        <p className="text-gray-600 text-sm">
+          아직 회원이 아니신가요?{" "}
+          <Link
+            href="/signup"
+            className="text-blue-600 font-semibold hover:text-blue-800 hover:underline transition"
+          >
+            회원가입
+          </Link>
+        </p>
+      </div>
 
       <button
         type="submit"
