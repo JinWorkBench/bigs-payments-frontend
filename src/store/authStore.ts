@@ -7,6 +7,7 @@ import {
   getAccessToken,
   getRefreshToken,
 } from "@/utils/storage";
+import { refreshTokenAPI } from "@/lib/api/token";
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
@@ -42,5 +43,30 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   hydrate: () => {},
   setUser: (user: User) => {},
   clearError: () => {},
-  refreshAccessToken: async () => {},
+
+  // 액세스 토큰 갱신
+  refreshAccessToken: async () => {
+    const refreshToken = get().refreshToken;
+
+    if (!refreshToken) {
+      get().logout();
+      return;
+    }
+
+    try {
+      const response = await refreshTokenAPI(refreshToken);
+
+      if (response.success && response.data) {
+        // 새 토큰 setTokens 함수로 저장
+        get().setTokens(response.data.accessToken, response.data.refreshToken);
+      } else {
+        // 토큰 갱신 실패 시 로그아웃 처리
+        console.error("토큰 갱신 실패:", response.error);
+        get().logout();
+      }
+    } catch (error) {
+      console.error("토큰 갱신 중 오류 발생:", error);
+      get().logout();
+    }
+  },
 }));
