@@ -1,3 +1,6 @@
+"use client";
+
+import { useAuthStore } from "@/store/authStore";
 import type { ApiResponse } from "@/types/api";
 import type { BoardItem } from "@/types/board";
 
@@ -7,6 +10,16 @@ export const getBoardsAPI = async (
   size: number,
 ): Promise<ApiResponse<BoardItem[]>> => {
   try {
+    // Zustand에서 토큰 가져오기
+    const accessToken = useAuthStore.getState().accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: "액세스 토큰이 없습니다. 로그인이 필요합니다.",
+      };
+    }
+
     // 쿼리 파라미터 생성
     const queryParams = new URLSearchParams({
       page: page.toString(),
@@ -17,10 +30,11 @@ export const getBoardsAPI = async (
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
       return {
