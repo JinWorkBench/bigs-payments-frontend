@@ -40,6 +40,7 @@ export const getBoardsAPI = async (
       return {
         success: false,
         error: data.error || "글 목록 조회 실패",
+        status: response.status,
       };
     }
 
