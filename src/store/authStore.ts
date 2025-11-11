@@ -3,6 +3,8 @@ import { AuthStore, User } from "@/types/auth";
 import {
   saveAccessToken,
   saveRefreshToken,
+  getAccessToken,
+  getRefreshToken,
   clearAuthStorage,
 } from "@/utils/storage";
 import { refreshTokenAPI } from "@/lib/api/token";
@@ -24,6 +26,30 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       refreshToken,
       user: user ?? get().user,
     });
+  },
+
+  // 토큰 복원
+  initializeFromStorage: async () => {
+    const accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
+
+    console.log("토큰 복원 여부");
+    console.log("accessToken:", accessToken);
+    console.log("refreshToken:", refreshToken);
+
+    // 둘 다 있으면 Zustand에 저장
+    if (accessToken && refreshToken) {
+      set({
+        accessToken,
+        refreshToken,
+      });
+      console.log("토큰 복원 완료");
+      return;
+    }
+
+    if (!refreshToken) {
+      return;
+    }
   },
 
   // 로그아웃
