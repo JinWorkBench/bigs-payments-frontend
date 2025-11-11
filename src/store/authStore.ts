@@ -46,10 +46,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       console.log("토큰 복원 완료");
       return;
     }
-
-    if (!refreshToken) {
-      return;
-    }
   },
 
   // 로그아웃
