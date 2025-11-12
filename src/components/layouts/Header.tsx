@@ -20,49 +20,77 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4">
           {/* 로고/홈 링크 */}
-          <Link
-            href="/"
-            className="text-xl font-bold text-gray-900 hover:text-blue-600 transition"
-          >
-            BIGS Portfolio
-          </Link>
+          <div className="flex-shrink-0">
+            <Link
+              href="/"
+              className="text-xl font-bold text-gray-900 hover:text-blue-600 transition"
+            >
+              BIGS Portfolio
+            </Link>
+          </div>
 
-          {/* 중앙: 게시판 버튼 */}
-          <Link
-            href="/boards"
-            className="px-4 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
-          >
-            게시판
-          </Link>
+          {/* 네비게이션 메뉴 */}
+          <nav className="flex-1 flex justify-center">
+            <ul className="flex gap-6">
+              <li>
+                <Link
+                  href="/boards"
+                  className="text-gray-700 font-medium hover:text-blue-600 transition"
+                >
+                  게시판
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#features"
+                  className="text-gray-700 font-medium hover:text-blue-600 transition"
+                >
+                  기능
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#about"
+                  className="text-gray-700 font-medium hover:text-blue-600 transition"
+                >
+                  소개
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
           {/* 우측: 사용자 정보 + 토글 + 로그아웃 */}
-          <div className="flex items-center gap-6">
-            {/* API 모드 토글 */}
-            <ModeSwitch />
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-6">
+              {/* API 모드 토글 */}
+              <ModeSwitch />
 
-            {/* 사용자 정보 또는 로그인 버튼 */}
-            {user ? (
-              <div className="flex items-center gap-4">
-                <div className="text-sm text-gray-700">
-                  <span className="font-semibold">{user.name}</span>님
-                  환영합니다!
-                  <span className="text-gray-500 ml-1">({user.username})</span>
+              {/* 사용자 정보 또는 로그인 버튼 */}
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <div className="text-sm text-gray-700">
+                    <span className="font-semibold">{user.name}</span>님
+                    환영합니다!
+                    <span className="text-gray-500 ml-1">
+                      ({user.username})
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 transition"
+                  >
+                    로그아웃
+                  </button>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 transition"
+              ) : (
+                <Link
+                  href="/signin"
+                  className="px-4 py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600 transition"
                 >
-                  로그아웃
-                </button>
-              </div>
-            ) : (
-              <Link
-                href="/signin"
-                className="px-4 py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600 transition"
-              >
-                로그인
-              </Link>
-            )}
+                  로그인
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
