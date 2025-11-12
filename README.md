@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏢 BIGS Payments - 게시판
 
-## Getting Started
+> 사용자 인증과 CRUD 게시판 기능을 갖춘 게시판 
+---
 
-First, run the development server:
+### 📌 프로젝트 개요
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**JWT 기반 인증 시스템**과 **게시판 CRUD 기능**을 제공하는 웹 애플리케이션입니다.  
+사용자는 회원가입 후 강력한 비밀번호 검증을 거쳐 로그인하고, 게시글을 작성, 조회, 수정, 삭제할 수 있습니다.  
+Next.js route.ts를 통한 API 프록시 패턴으로 백엔드 API 엔드포인트를 완전히 캡슐화하여 보안을 강화했으며,  
+자동 토큰 갱신 시스템으로 사용자 경험을 개선했습니다.  
+또한 페이지네이션, 반응형 디자인, 실시간 입력값 검증 등으로 효율적이고 사용자 친화적인 웹 애플리케이션을 구현했습니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔧 기술 스택
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 분류 | 기술 |
+|------|------|
+| **Framework** | Next.js 16 (App Router) |
+| **Language** | TypeScript |
+| **UI Library** | React 19 |
+| **Styling** | Tailwind CSS |
+| **State Management** | Zustand |
+| **HTTP Client** | Fetch API |
+| **Code Quality** | ESLint + Prettier |
+| **Package Manager** | npm |
+| **Deployment** | Vercel |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ✨ 주요 기능
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🔐 인증 및 보안
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **회원가입**
+  - 이메일 형식 검증
+  - 비밀번호 유효성 검증 (8글자 이상, 대소문자/숫자/특수문자 포함)
+  - 유효성 검사 실패 시 필드별 에러 메시지 표시
+  - 회원가입 실패 시 서버 오류 메세지 표시
 
-## Deploy on Vercel
+- **로그인**
+  - 이메일과 비밀번호 기반 인증
+  - 성공 시 액세스 토큰과 리프레시 토큰 발급
+  - 발급된 토큰을 로컬스토리지에 저장하여 이후 API 요청 시 활용
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **토큰 관리**
+  - 401 에러 자동 감지 후 토큰 갱신
+  - 리프레시 토큰으로 새 액세스 토큰 발급
+  - 토큰 갱신 후 원래 요청 자동 재시도
+  - 토큰 만료 혹은 갱신 실패 시 자동 로그아웃
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **로그아웃**
+  - 로컬스토리지에 저장된 엑세스/리프레시 토큰 삭제
+  - 사용자 정보 및 모든 인증 상태 초기화
+  - Zustand 상태 관리 스토어 리셋
+ 
+- **보안**
+  - Next.js route.ts를 통한 백엔드 API 프록시 서버 구현
+  - 클라이언트에서 외부 API 직접 호출 방지 (API URL 노출 차단)
+  - 모든 API 요청이 프록시를 거쳐 처리되므로 보안 강화
+  - Authorization 헤더로 JWT 토큰 관리
+  - 환경변수로 민감한 정보(API URL, 포트) 보호
+
+### 📝 게시판 (CRUD)
+
+- **📖 목록 조회**
+  - 페이지네이션 지원 (페이지당 10개 항목)
+  - 카테고리별 표시 (공지, 자유, Q&A, 기타)
+  - 전체 게시글 수 표시
+  - Mock 데이터 또는 실제 API 연동 토글 지원
+
+- **🔍 상세 조회**
+  - 제목, 내용, 카테고리, 작성일 등 상세 정보 표시
+  - 동적 라우팅 (`/boards/[id]`) 구현
+  - 수정 및 삭제 버튼
+  - 목록으로 돌아가기 네비게이션
+
+- **✏️ 게시글 생성/수정**
+  - 통합 에디터 페이지 (`/boards/editor`) 구현
+    - 생성 모드: `?postId` 없음
+    - 수정 모드: `?postId=1`
+  - 제목, 내용, 카테고리, 이미지 입력 필드
+  - 실시간 글자 수 제한 표시 (제목 200자, 내용 5000자)
+  - 파일 검증 (5MB 이하, 이미지 형식만)
+  - 수정 모드 진입 시 기존 데이터 자동 로드
+
+- **🗑️ 게시글 삭제**
+  - 삭제 전 확인 모달로 사용자 경험 개선
+  - 삭제 완료 후 게시판 목록으로 자동 이동
+
+### 👤 사용자 정보 표시
+
+- **헤더 컴포넌트**
+  - **로그인:** "(이름)님 환영합니다!" 텍스트 + 아이디 표시, 로그아웃 버튼 표시
+  - **미로그인:** 로그인 버튼만 표시
+  - 게시판으로 이동 버튼 
+  - 로그아웃 버튼 클릭 시 토큰 삭제 및 로그인 페이지로 이동
+
+### 🎨 UI/UX
+  - 로딩 상태 표시
+  - 에러 상태 처리
+  - 빈 상태 처리
+  - Tailwind CSS를 이용한 반응형 디자인
+---
+
+### 💬 배포
+[배포 링크 바로가기 (vercel)](https://bigs-payments-frontend.vercel.app/)
+
