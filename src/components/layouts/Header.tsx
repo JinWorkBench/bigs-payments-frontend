@@ -1,11 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import ModeSwitch from "@/components/common/ModeSwitch";
 
 export default function Header() {
   const router = useRouter();
-
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
@@ -14,56 +15,56 @@ export default function Header() {
     router.push("/signin");
   };
 
-  console.log("Header 렌더링", { user });
-
   return (
-    <header className="bg-white shadow sticky top-0 z-40">
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        {user ? (
+    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4">
+          {/* 로고/홈 링크 */}
+          <Link
+            href="/"
+            className="text-xl font-bold text-gray-900 hover:text-blue-600 transition"
+          >
+            BIGS Portfolio
+          </Link>
 
-          // 로그인
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-            {/* 왼쪽: 사용자 정보 */}
-            <div className="flex flex-col gap-1">
-              <p className="text-lg font-semibold text-gray-800">
-                <span className="text-blue-600">{user.name}</span>님 환영합니다!
-              </p>
-              <p className="text-sm text-gray-500">
-                아이디:{" "}
-                <span className="font-medium text-gray-700">
-                  {user.username}
-                </span>
-              </p>
-            </div>
+          {/* 중앙: 게시판 버튼 */}
+          <Link
+            href="/boards"
+            className="px-4 py-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+          >
+            게시판
+          </Link>
 
-            {/* 오른쪽: 버튼들 */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => router.push("/boards")}
-                className="flex-1 sm:flex-none px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+          {/* 우측: 사용자 정보 + 토글 + 로그아웃 */}
+          <div className="flex items-center gap-6">
+            {/* API 모드 토글 */}
+            <ModeSwitch />
+
+            {/* 사용자 정보 또는 로그인 버튼 */}
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-gray-700">
+                  <span className="font-semibold">{user.name}</span>님
+                  환영합니다!
+                  <span className="text-gray-500 ml-1">({user.username})</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 transition"
+                >
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/signin"
+                className="px-4 py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600 transition"
               >
-                게시판으로
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
-              >
-                로그아웃
-              </button>
-            </div>
+                로그인
+              </Link>
+            )}
           </div>
-        ) : (
-            
-          // 비로그인
-          <div className="flex justify-end gap-2">
-            <button
-              onClick={() => router.push("/signin")}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
-            >
-              로그인
-            </button>
-          </div>
-        )}
+        </div>
       </div>
     </header>
   );
