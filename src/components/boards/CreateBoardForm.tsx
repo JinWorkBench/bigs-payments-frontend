@@ -108,6 +108,7 @@ export default function CreateBoardForm() {
             maxLength={200}
             disabled={isLoading}
           />
+          <p className="text-xs text-gray-500 mt-1">{title.length} / 200</p>
         </div>
 
         {/* 카테고리 */}
@@ -139,6 +140,7 @@ export default function CreateBoardForm() {
             maxLength={5000}
             disabled={isLoading}
           />
+          <p className="text-xs text-gray-500 mt-1">{content.length} / 5000</p>
         </div>
 
         {/* 이미지 */}
