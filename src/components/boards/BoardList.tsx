@@ -42,7 +42,7 @@ export default function BoardList() {
       {/* 생성 버튼 */}
       <div className="mb-6 flex justify-end">
         <button
-          onClick={() => router.push('/boards/create')}
+          onClick={() => router.push('/boards/editor')}
           className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         >
           + 새 게시글
