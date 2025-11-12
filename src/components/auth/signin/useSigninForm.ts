@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword } from "@/utils/validate";
+import { getUserName } from "@/utils/userStorage";
 import { signinAPI } from "@/lib/api/auth";
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from "@/store/authStore";
 
 export const useSigninForm = () => {
   const router = useRouter();
@@ -53,9 +54,17 @@ export const useSigninForm = () => {
 
     if (response.success && response.data) {
       console.log("로그인 성공:", response.data);
-      
+
+      const name = getUserName(username);
+
       // 응답 성공 시 토큰 저장 및 리다이렉트
-      setTokens(response.data.accessToken, response.data.refreshToken);
+      setTokens(
+        response.data.accessToken,
+        response.data.refreshToken,
+        name ? { username, name } : { username, name: username },
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
       router.replace("/");
     } else {
       // 실패 시 에러 메시지 표시
