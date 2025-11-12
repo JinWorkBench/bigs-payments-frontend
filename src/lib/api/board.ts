@@ -6,17 +6,17 @@ import { getMockBoardDetail } from "../mock/boardDetailData";
 import type { ApiResponse } from "@/types/api";
 import type { BoardsPageResponse, BoardDetail } from "@/types/board";
 
-// Mock 사용 여부 결정
-const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
-
 // 글 목록 조회 API 호출
 export const getBoardsAPI = async (
   page: number,
   size: number,
 ): Promise<ApiResponse<BoardsPageResponse>> => {
   try {
+    // Zustand에서 읽기
+    const useMockData = useAuthStore.getState().useMockData;
+    
     // Mock 모드
-    if (USE_MOCK_DATA) {
+    if (useMockData) {
       console.log(`Mock 데이터 사용 중 (page: ${page}, size: ${size})...`);
 
       // 페이지와 사이즈를 함수에 전달
@@ -85,7 +85,9 @@ export const getBoardDetailAPI = async (
   id: number,
 ): Promise<ApiResponse<BoardDetail>> => {
   try {
-    if (USE_MOCK_DATA) {
+    const useMockData = useAuthStore.getState().useMockData;
+
+    if (useMockData) {
       console.log(`Mock 게시글 상세 데이터 (id: ${id})...`);
       const mockDetail = getMockBoardDetail(id);
 
@@ -155,6 +157,15 @@ export const createBoardAPI = async (
   file?: File,
 ): Promise<ApiResponse<BoardDetail>> => {
   try {
+    const useMockData = useAuthStore.getState().useMockData;
+
+    if (useMockData) {
+      return {
+        success: false,
+        error: 'Mock 모드에서는 게시글을 작성할 수 없습니다.',
+      };
+    }
+
     const accessToken = useAuthStore.getState().accessToken;
 
     if (!accessToken) {
@@ -214,6 +225,15 @@ export const updateBoardAPI = async (
   file?: File,
 ): Promise<ApiResponse<void>> => {
   try {
+    const useMockData = useAuthStore.getState().useMockData;
+
+    if (useMockData) {
+      return {
+        success: false,
+        error: 'Mock 모드에서는 게시글을 수정할 수 없습니다.',
+      };
+    }
+
     const accessToken = useAuthStore.getState().accessToken;
 
     if (!accessToken) {
