@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
+// 게시글 목록 조회
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("Authorization");
@@ -38,5 +39,46 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("글 목록 조회 오류:", error);
     return NextResponse.json({ error: "서버 오류" }, { status: 500 });
+  }
+}
+
+// 게시글 생성
+export async function POST(request: NextRequest) {
+  try {
+    const authHeader = request.headers.get("Authorization");
+
+    if (!authHeader) {
+      return NextResponse.json(
+        { error: "인증 토큰이 필요합니다." },
+        { status: 401 },
+      );
+    }
+
+    console.log(`게시글 생성 API`);
+
+    // multipart/form-data 처리
+    const formData = await request.formData();
+
+    const res = await fetch(`${API_BASE_URL}/boards`, {
+      method: "POST",
+      headers: {
+        Authorization: authHeader,
+      },
+      body: formData,
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      return NextResponse.json(data, { status: res.status });
+    }
+
+    return NextResponse.json(data, { status: 201 });
+  } catch (error) {
+    console.error("boards create error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
