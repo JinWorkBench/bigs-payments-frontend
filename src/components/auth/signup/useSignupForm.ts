@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { saveUser } from "@/utils/userStorage";
 import {
   validateEmail,
   validateName,
@@ -82,7 +83,8 @@ export const useSignupForm = () => {
     setIsLoading(false);
 
     if (response.success) {
-      // 성공 시 로그인 페이지 이동
+      // 성공 시 로컬스토리지 저장 및 로그인 페이지 이동
+      saveUser(username, name);
       router.replace("/signin");
     } else {
       // 실패 시 에러 메시지 표시
