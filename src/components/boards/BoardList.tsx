@@ -10,6 +10,7 @@ export default function BoardList() {
   const [boardsData, setBoardsData] = useState<BoardsPageResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const waitForToken = useWaitForToken();
   const withAuthError = useHandleAuthError();
@@ -30,6 +31,7 @@ export default function BoardList() {
 
       if (response.data) {
         setBoardsData(response.data);
+        setCurrentPage(page);
       }
 
       setIsLoading(false);
@@ -52,6 +54,11 @@ export default function BoardList() {
       await fetchBoards(0);
     })();
   }, [waitForToken, fetchBoards]);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (newPage: number) => {
+    fetchBoards(newPage);
+  };
 
   // 로딩 상태
   if (isLoading) {
@@ -104,10 +111,41 @@ export default function BoardList() {
         ))}
       </div>
 
-      {/* 페이지네이션 */}
-      <div className="mt-6 text-center text-sm text-gray-600">
-        페이지 {boardsData?.number || 0} / 총 {boardsData?.totalPages || 0}
-        (총 {boardsData?.totalElements || 0}개)
+      {/* 페이지네이션 버튼 */}
+      <div className="mt-6 flex items-center justify-center gap-4">
+        {/* 이전 버튼 */}
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+          className={`px-4 py-2 rounded ${
+            currentPage === 0
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
+        >
+          이전
+        </button>
+
+        {/* 페이지 정보 */}
+        <div className="text-sm text-gray-600">
+          페이지 {currentPage + 1} / {boardsData?.totalPages || 0}
+          <span className="ml-2 text-gray-400">
+            (총 {boardsData?.totalElements || 0}개)
+          </span>
+        </div>
+
+        {/* 다음 버튼 */}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage >= (boardsData?.totalPages || 1) - 1}
+          className={`px-4 py-2 rounded ${
+            currentPage >= (boardsData?.totalPages || 1) - 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
+        >
+          다음
+        </button>
       </div>
     </div>
   );
