@@ -6,6 +6,13 @@ export default function ModeSwitch() {
   const useMockData = useAuthStore((state) => state.useMockData);
   const toggleMockMode = useAuthStore((state) => state.toggleMockMode);
 
+  const handleToggleMode = () => {
+    toggleMockMode();
+    setTimeout(() => {
+      window.location.reload();
+    }, 0);
+  };
+
   return (
     <div className="flex items-center gap-3">
       {/* 라벨 */}
@@ -15,7 +22,7 @@ export default function ModeSwitch() {
 
       {/* 전원 스위치 버튼 */}
       <button
-        onClick={toggleMockMode}
+        onClick={handleToggleMode}
         className={`
           relative w-14 h-8 rounded-full transition-all duration-300
           ${useMockData ? "bg-green-500" : "bg-gray-300"}
