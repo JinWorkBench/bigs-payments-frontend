@@ -256,11 +256,26 @@ export const updateBoardAPI = async (
       return {
         success: false,
         error: "액세스 토큰이 없습니다.",
+        status: 401,
       };
     }
 
+    // multipart/form-data 생성
     const formData = new FormData();
-    formData.append("request", JSON.stringify({ title, content, category }));
+
+    // 서버의 @RequestPart("request")에 매핑될 JSON 부분
+    const requestPayload = {
+      title,
+      content,
+      category,
+    };
+
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(requestPayload)], {
+        type: "application/json", // JSON 타입 명시
+      }),
+    );
 
     if (file) {
       formData.append("file", file);

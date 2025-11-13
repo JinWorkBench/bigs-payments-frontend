@@ -63,16 +63,20 @@ export async function PATCH(
 
     console.log(`게시글 수정 API (id: ${id})`);
 
-    // multipart/form-data 처리
-    const formData = await request.formData();
+    // 클라이언트에서 전달 받은 Content-Type
+    const contentType = request.headers.get("content-type") ?? undefined;
+
+    // raw body 그대로 읽어서 프록시
+    const body = await request.arrayBuffer();
 
     // 외부 API 호출
     const res = await fetch(`${API_BASE_URL}/boards/${id}`, {
       method: "PATCH",
       headers: {
+        ...(contentType ? { "Content-Type": contentType } : {}),
         Authorization: authHeader,
       },
-      body: formData,
+      body,
     });
 
     const data = await res.json().catch(() => ({}));
