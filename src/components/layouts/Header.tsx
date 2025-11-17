@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import { useSidebarStore } from "@/store/sidebarStore";
 
 export default function Header() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+
+  const { toggleSidebar } = useSidebarStore();
 
   const handleLogout = () => {
     logout();
@@ -60,7 +63,7 @@ export default function Header() {
 
           {/* 우측: 사용자 정보 + 토글 + 로그아웃 */}
           <div className="flex-shrink-0">
-            <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6">
               {/* 사용자 정보 또는 로그인 버튼 */}
               {user ? (
                 <div className="flex items-center gap-4">
@@ -87,6 +90,27 @@ export default function Header() {
                 </Link>
               )}
             </div>
+
+            {/* 모바일 햄버거 버튼 */}
+            <button
+              onClick={toggleSidebar}
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+              aria-label="메뉴 열기"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
