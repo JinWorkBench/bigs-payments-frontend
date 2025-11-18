@@ -3,10 +3,20 @@
 import Link from "next/link";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const { isOpen, closeSidebar } = useSidebarStore();
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const router = useRouter();
+
+  // 로그아웃 핸들러
+  const handleLogout = () => {
+    logout();
+    closeSidebar();
+    router.push("/");
+  };
 
   return (
     <aside
@@ -50,13 +60,20 @@ export default function Sidebar() {
       {/* 로그인/로그아웃 버튼 */}
       <div className="border-t border-gray-200 p-6">
         {user ? (
-          <button className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2">
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
+          >
             로그아웃
           </button>
         ) : (
-          <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          <Link
+            href="/signin"
+            onClick={closeSidebar}
+            className="block w-full px-4 py-2 bg-blue-600 text-center text-white rounded-lg hover:bg-blue-700 transition"
+          >
             로그인
-          </button>
+          </Link>
         )}
       </div>
     </aside>
