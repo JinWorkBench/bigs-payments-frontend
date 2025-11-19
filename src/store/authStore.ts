@@ -10,9 +10,7 @@ import {
   getUser,
 } from "@/utils/storage";
 import { refreshTokenAPI } from "@/lib/api/token";
-
-// Mock 상태 저장 키
-const MOCK_MODE_KEY = "app:mock-mode";
+import { mockUser } from "@/lib/mock/userData";
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
@@ -25,7 +23,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   // Mock 모드 토글 함수
   toggleMockMode: () => {
     const newMockMode = !get().useMockData;
-    localStorage.setItem(MOCK_MODE_KEY, JSON.stringify(newMockMode));
+    localStorage.setItem("useMockData", JSON.stringify(newMockMode));
     set({ useMockData: newMockMode });
     console.log(`Mock mode: ${newMockMode ? "ON" : "OFF"}`);
   },
@@ -55,9 +53,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     const refreshToken = getRefreshToken();
 
     // localStorage에서 Mock 모드 상태 복원
-    const savedMockMode = localStorage.getItem(MOCK_MODE_KEY);
-    const useMockData = savedMockMode ? JSON.parse(savedMockMode) : false;
-    
+    const savedMockMode = localStorage.getItem("useMockData");
+    const useMockData = savedMockMode === "true";
+
     // user 정보 복원
     const savedUser = getUser();
 
@@ -67,12 +65,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     console.log("useMockData:", useMockData);
     console.log("user:", savedUser);
 
-    // 둘 다 있으면 Zustand에 저장
-    if (accessToken && refreshToken) {
-      set({ accessToken, refreshToken, user: savedUser, useMockData });
+    // Mock 모드 체크 로직
+    if (useMockData) {
+      set({
+        useMockData: true,
+        user: mockUser, // Mock 모드면 mockUser로 로그인
+      });
+    } else if (accessToken && refreshToken) {
+      set({ accessToken, refreshToken, user: savedUser, useMockData: false });
       console.log("토큰 복원 완료");
     } else {
-      set({ useMockData });
+      set({ useMockData: false });
     }
   },
 
@@ -81,12 +84,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     // 로컬 스토리지에서 토큰 삭제
     clearAuthStorage();
 
+    // Mock 모드 상태는 유지
+    const currentMockMode = get().useMockData;
+
     // Zustand 스토어 상태 초기화
     set({
       user: null,
       accessToken: null,
       refreshToken: null,
-      useMockData: false,
+      useMockData: currentMockMode,
     });
   },
 
