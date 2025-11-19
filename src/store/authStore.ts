@@ -10,7 +10,7 @@ import {
   getUser,
 } from "@/utils/storage";
 import { refreshTokenAPI } from "@/lib/api/token";
-import { mockUser } from "@/lib/mock/userData";
+import { mockUser, mockAccessToken, mockRefreshToken } from "@/lib/mock/userData";
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
@@ -70,6 +70,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       set({
         useMockData: true,
         user: mockUser, // Mock 모드면 mockUser로 로그인
+        accessToken: mockAccessToken,
+        refreshToken: mockRefreshToken
       });
     } else if (accessToken && refreshToken) {
       set({ accessToken, refreshToken, user: savedUser, useMockData: false });
