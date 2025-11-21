@@ -4,6 +4,24 @@ import Link from "next/link";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+
+// 환영 메세지 배열
+const LOGIN_MESSAGES = [
+  "오늘 하루 어떠세요?",
+  "환영합니다!",
+  "좋은 하루 되세요!",
+  "오늘도 화이팅!",
+];
+
+// 게스트 메세지 배열
+const GUEST_MESSAGES = ["로그인이 필요합니다.", "회원가입하고 시작해보세요!"];
+
+// 랜덤 메세지 선택 함수
+const getRandomMessage = (messages: string[]) => {
+  const randomIndex = Math.floor(Math.random() * messages.length);
+  return messages[randomIndex];
+};
 
 export default function Sidebar() {
   const { isOpen, closeSidebar } = useSidebarStore();
@@ -17,6 +35,13 @@ export default function Sidebar() {
     closeSidebar();
     router.push("/");
   };
+
+  // 메세지 조건부 렌더링
+  const welcomeMessage = useMemo(() => {
+    return user
+      ? getRandomMessage(LOGIN_MESSAGES)
+      : getRandomMessage(GUEST_MESSAGES);
+  }, [user]);
 
   return (
     <>
@@ -38,10 +63,10 @@ export default function Sidebar() {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <span className="text-lg font-semibold text-gray-800">
-              테스트 사용자 님 &gt;
+              {user ? `${user.name} 님 >` : "게스트 >"}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-2">오늘 하루 어떠세요?</p>
+          <p className="text-sm text-gray-500 mt-2">{welcomeMessage}</p>
         </div>
 
         {/* 네비게이션 메뉴 */}
@@ -82,7 +107,7 @@ export default function Sidebar() {
           {user ? (
             <>
               {/* 사용자명 표시 */}
-              
+
               <button
                 onClick={handleLogout}
                 className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
