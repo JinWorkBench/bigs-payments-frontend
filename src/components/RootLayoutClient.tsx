@@ -21,7 +21,7 @@ export default function RootLayoutClient({
       <Sidebar />
       {children}
       <div className="relative max-w-7xl mx-auto">
-        <div className="absolute bottom-4 right-4 z-50">
+        <div className="hidden md:block absolute bottom-4 right-4 z-50">
           <ModeSwitch />
         </div>
       </div>
