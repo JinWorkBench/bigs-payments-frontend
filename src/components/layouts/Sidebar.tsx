@@ -34,6 +34,16 @@ export default function Sidebar() {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
+        {/* 프로필 */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <span className="text-lg font-semibold text-gray-800">
+              테스트 사용자 님 &gt;
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mt-2">오늘 하루 어떠세요?</p>
+        </div>
+
         {/* 네비게이션 메뉴 */}
         <nav className="p-6">
           <ul className="space-y-4">
@@ -72,7 +82,7 @@ export default function Sidebar() {
           {user ? (
             <>
               {/* 사용자명 표시 */}
-              <p className="text-sm text-gray-600 mb-4">{user.username}님</p>
+              
               <button
                 onClick={handleLogout}
                 className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
