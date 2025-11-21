@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import WelcomeMessage from "@/components/common/WelcomeMessage";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { useSidebarStore } from "@/store/sidebarStore";
@@ -67,12 +68,9 @@ export default function Header() {
               {/* 사용자 정보 또는 로그인 버튼 */}
               {user ? (
                 <div className="flex items-center gap-4">
-                  <div className="text-sm text-gray-700">
-                    <span className="font-semibold">{user.name}</span>님
-                    환영합니다!
-                    <span className="text-gray-500 ml-1">
-                      ({user.username})
-                    </span>
+                  <div className="flex text-sm text-gray-700">
+                    <span className="font-semibold">{user.name}</span>님&nbsp;
+                    <WelcomeMessage user={user} />
                   </div>
                   <button
                     onClick={handleLogout}
