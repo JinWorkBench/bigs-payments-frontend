@@ -27,13 +27,21 @@ export default function Header() {
               href="/"
               className="text-xl font-bold text-gray-900 hover:text-blue-600 transition"
             >
-              BIGS Portfolio
+              Brilyent72
             </Link>
           </div>
 
           {/* 네비게이션 메뉴 */}
-          <nav className="flex-1 flex justify-center">
+          <nav className="hidden md:flex flex-1 justify-center">
             <ul className="flex gap-6">
+              <li>
+                <Link
+                  href="/#about"
+                  className="text-gray-700 font-medium hover:text-blue-600 transition"
+                >
+                  소개
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/boards"
@@ -48,14 +56,6 @@ export default function Header() {
                   className="text-gray-700 font-medium hover:text-blue-600 transition"
                 >
                   기능
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#about"
-                  className="text-gray-700 font-medium hover:text-blue-600 transition"
-                >
-                  소개
                 </Link>
               </li>
             </ul>
