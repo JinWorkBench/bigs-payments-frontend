@@ -21,9 +21,9 @@ export default function Header() {
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+        <div className="grid grid-cols-3 items-center gap-4">
           {/* 로고/홈 링크 */}
-          <div className="flex-shrink-0">
+          <div className="justify-self-start">
             <Link
               href="/"
               className="text-xl font-bold text-gray-900 hover:text-blue-600 transition"
@@ -33,7 +33,7 @@ export default function Header() {
           </div>
 
           {/* 네비게이션 메뉴 */}
-          <nav className="hidden md:flex flex-1 justify-center">
+          <nav className="hidden md:flex">
             <ul className="flex gap-6">
               <li>
                 <Link
@@ -63,7 +63,7 @@ export default function Header() {
           </nav>
 
           {/* 우측: 사용자 정보 + 토글 + 로그아웃 */}
-          <div className="flex-shrink-0">
+          <div className="justify-self-end">
             <div className="hidden md:flex items-center gap-6">
               {/* 사용자 정보 또는 로그인 버튼 */}
               {user ? (
